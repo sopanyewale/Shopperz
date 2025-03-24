@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "443494857588",
+    "project_id": "shopperz-27410",
+    "storage_bucket": "shopperz-27410.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443494857588:android:5c88d2379553e685670a21",
+        "android_client_info": {
+          "package_name": "com.example.mvvmarch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq5j3_y_6kjDI2GtSvhQSUUWdc5xn0THg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
