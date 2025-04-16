@@ -31,22 +31,24 @@ import com.example.mvvmarch.presentation.viewmodel.CategoryViewModel
 
 
 @Composable
-fun CategoryScreen(navController: NavController,
-                   categoryViewModel: CategoryViewModel = hiltViewModel(),
-                   modifier: Modifier = Modifier) {
+fun CategoryScreen(
+    navController: NavController,
+    categoryViewModel: CategoryViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
+) {
     val categories = categoryViewModel.productCategories.collectAsState().value
-    LazyVerticalGrid(columns = GridCells.Fixed(2),
-        modifier = modifier,
-        content = {
-            items(categories.size) {
-                GridItem(
-                    onClick = { categoryViewModel.onCategorySelected(categories[it]) },
-                    imageRes = categories[it].imageRes,
-                    title = categories[it].name,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        })
+    LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = modifier, content = {
+        items(categories.size) {
+            GridItem(
+                onClick = {
+                    navController.navigate("productList/${categories[it].name}")
+                },
+                imageRes = categories[it].imageRes,
+                title = categories[it].displayName,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    })
     LaunchedEffect(key1 = true) {
         categoryViewModel.getProductCategories()
     }
@@ -54,10 +56,7 @@ fun CategoryScreen(navController: NavController,
 
 @Composable
 fun GridItem(
-    onClick: () -> Unit,
-    imageRes: Int,
-    title: String,
-    modifier: Modifier
+    onClick: () -> Unit, imageRes: Int, title: String, modifier: Modifier
 ) {
     Card(
         onClick = onClick,
@@ -72,7 +71,8 @@ fun GridItem(
                 painter = painterResource(id = imageRes),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .aspectRatio(16f / 9f)
             )
             Box(
@@ -89,8 +89,7 @@ fun GridItem(
                     .padding(8.dp)
             ) {
                 Text(
-                    text = title,
-                    style = TextStyle(color = Color.White, fontSize = 16.sp)
+                    text = title, style = TextStyle(color = Color.White, fontSize = 16.sp)
                 )
             }
         }
