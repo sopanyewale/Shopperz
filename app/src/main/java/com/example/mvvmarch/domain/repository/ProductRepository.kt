@@ -8,4 +8,6 @@ interface ProductRepository {
     suspend fun getCategories(): List<String>
 
     suspend fun getProducts(category: String): List<ProductsItem>
+
+    suspend fun getProductDetails(productId: Int): ProductsItem
 }

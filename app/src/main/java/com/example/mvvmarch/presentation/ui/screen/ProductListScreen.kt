@@ -2,6 +2,7 @@ package com.example.mvvmarch.presentation.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -78,7 +79,10 @@ fun ProductListScreen(
             modifier = Modifier.fillMaxSize(),
             content = {
                 items(products.size) {
-                    ProductItem(item = products[it])
+                    ProductItem(item = products[it], {
+                        productListViewModel.onProductSelected(products[it])
+                        navController.navigate("productDetails")
+                    })
                 }
             }
         )
@@ -87,7 +91,7 @@ fun ProductListScreen(
 
 
 @Composable
-fun ProductItem(item: ProductsItem) {
+fun ProductItem(item: ProductsItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth(1f)
@@ -100,10 +104,15 @@ fun ProductItem(item: ProductsItem) {
                 .fillMaxWidth()
                 .background(color = Color.White)
                 .padding(8.dp)
+                .clickable {
+                    onClick()
+                }
+
         ) {
             AsyncImage(
                 model = item.image,
                 contentDescription = "Product image",
+                placeholder = painterResource(id = android.R.drawable.ic_menu_gallery),
                 modifier = Modifier
                     .width(80.dp)
                     .aspectRatio(3f / 4f),

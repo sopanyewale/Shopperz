@@ -18,9 +18,16 @@ class ProductsViewModel @Inject constructor(
     private val _productsList = MutableStateFlow(emptyList<ProductsItem>())
     val productsList: StateFlow<List<ProductsItem>> = _productsList
 
+    private val _selectedProduct = MutableStateFlow(ProductsItem())
+    val selectedProduct: StateFlow<ProductsItem> = _selectedProduct
+
     fun getProductsByCategory(category: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _productsList.value = getProductsUseCase(category)
         }
+    }
+
+    fun onProductSelected(product: ProductsItem) {
+        _selectedProduct.value = product
     }
 }
