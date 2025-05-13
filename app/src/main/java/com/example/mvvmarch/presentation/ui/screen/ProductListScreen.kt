@@ -29,25 +29,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.mvvmarch.data.model.ProductsItem
 import com.example.mvvmarch.domain.capitalizeWords
+import com.example.mvvmarch.domain.model.Product
 import com.example.mvvmarch.presentation.viewmodel.ProductsViewModel
 
 @Composable
 fun ProductListScreen(
     navController: NavController,
+    viewModel: ProductsViewModel,
     modifier: Modifier = Modifier,
     category: String
 ) {
 
-    val productListViewModel: ProductsViewModel = hiltViewModel()
-    val products = productListViewModel.productsList.collectAsState().value
+    val products = viewModel.productsList.collectAsState().value
 
     LaunchedEffect(key1 = true) {
-        productListViewModel.getProductsByCategory(category)
+        viewModel.getProductsByCategory(category)
     }
     if (products.isEmpty()) {
         Text(
@@ -79,10 +79,10 @@ fun ProductListScreen(
             modifier = Modifier.fillMaxSize(),
             content = {
                 items(products.size) {
-                    ProductItem(item = products[it], {
-                        productListViewModel.onProductSelected(products[it])
+                    ProductItem(item = products[it]) {
+                        viewModel.onProductSelected(products[it])
                         navController.navigate("productDetails")
-                    })
+                    }
                 }
             }
         )
@@ -91,7 +91,7 @@ fun ProductListScreen(
 
 
 @Composable
-fun ProductItem(item: ProductsItem, onClick: () -> Unit) {
+fun ProductItem(item: Product, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth(1f)

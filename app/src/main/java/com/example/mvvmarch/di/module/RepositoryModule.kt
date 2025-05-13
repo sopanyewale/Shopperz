@@ -1,6 +1,8 @@
 package com.example.mvvmarch.di.module
 
+import com.example.mvvmarch.data.local.ProductDao
 import com.example.mvvmarch.data.remote.ApiService
+import com.example.mvvmarch.data.repository.CartRepositoryImpl
 import com.example.mvvmarch.data.repository.ProductRepositoryImpl
 import dagger.Module
 import dagger.Provides
@@ -15,6 +17,10 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideProductRepository(apiService : ApiService) = ProductRepositoryImpl(apiService)
+
+    @Provides
+    @Singleton
+    fun provideCartRepository(productDao: ProductDao) = CartRepositoryImpl(productDao)
 
 }
 

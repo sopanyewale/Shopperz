@@ -1,5 +1,6 @@
 package com.example.mvvmarch.data.repository
 
+import com.example.mvvmarch.data.mapper.toDomain
 import com.example.mvvmarch.data.model.ProductsItem
 import com.example.mvvmarch.data.remote.ApiService
 import com.example.mvvmarch.domain.repository.ProductRepository
@@ -10,7 +11,7 @@ class ProductRepositoryImpl @Inject constructor(private val apiService: ApiServi
 
     override suspend fun getCategories() = apiService.getCategories()
 
-    override suspend fun getProducts(category: String) = apiService.getProducts(category)
+    override suspend fun getProducts(category: String) = apiService.getProducts(category).map { it.toDomain() }
 
     override suspend fun getProductDetails(productId: Int) = apiService.getProductDetails(productId)
 }

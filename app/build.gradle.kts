@@ -6,6 +6,7 @@ plugins {
     kotlin("kapt")
     id("com.google.gms.google-services")
     id("kotlin-parcelize")
+    alias(libs.plugins.ksp.plugin)
 }
 
 android {
@@ -47,9 +48,10 @@ android {
 dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging.ktx)
     kapt(libs.hilt.compiler)
+    ksp(libs.room.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -63,7 +65,9 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.coil)
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.androidx.material.icons.extended)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
