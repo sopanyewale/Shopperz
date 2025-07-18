@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mvvmarch.di.common.Dispatcher
 import com.example.mvvmarch.domain.model.Product
 import com.example.mvvmarch.domain.usecase.AddProductToCartDatabaseUseCase
+import com.example.mvvmarch.domain.usecase.GetCartItemCountUseCase
 import com.example.mvvmarch.domain.usecase.GetProductsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class ProductsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val getProductsUseCase: GetProductsUseCase,
-    private val addProductToCartDatabaseUseCase: AddProductToCartDatabaseUseCase
+    private val addProductToCartDatabaseUseCase: AddProductToCartDatabaseUseCase,
+    private val getCartItemCountUseCase: GetCartItemCountUseCase
 ) : ViewModel() {
     private val _productsList = MutableStateFlow(emptyList<Product>())
     val productsList: StateFlow<List<Product>> = _productsList
@@ -28,6 +30,16 @@ class ProductsViewModel @Inject constructor(
 
     private val _selectedProduct = MutableStateFlow(Product())
     val selectedProduct: StateFlow<Product> = _selectedProduct
+
+    private val _cartItemCount = MutableStateFlow(0)
+    val cartItemCount: StateFlow<Int> = _cartItemCount
+
+    init {
+        viewModelScope.launch(dispatcher.io) {
+            _cartItemCount.value = getCartItemCountUseCase()
+        }
+
+    }
 
     fun getProductsByCategory(category: String) {
         viewModelScope.launch(dispatcher.io) {
@@ -44,6 +56,7 @@ class ProductsViewModel @Inject constructor(
             val result = addProductToCartDatabaseUseCase(product)
             if (result > 0) {
                 _toastEvent.emit("Product added to cart")
+                _cartItemCount.value = getCartItemCountUseCase()
             } else {
                 _toastEvent.emit("Failed to add product to cart")
             }

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.mvvmarch.domain.model.Product
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductDao {
@@ -23,4 +24,11 @@ interface ProductDao {
 
     @Query("SELECT COUNT(*) FROM products")
     suspend fun getCartItemCount(): Int
+
+    @Query("SELECT * FROM products")
+    suspend fun getAllProducts(): List<Product>
+
+    //Observable type of query to get notified for the changes in products table
+    @Query("SELECT COUNT(*) FROM products")
+    fun getCartCount(): Flow<Int>
 }

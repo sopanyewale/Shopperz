@@ -1,6 +1,7 @@
 package com.example.mvvmarch.domain.repository
 
 import com.example.mvvmarch.domain.model.Product
+import kotlinx.coroutines.flow.Flow
 
 interface CartRepository {
 
@@ -8,11 +9,13 @@ interface CartRepository {
 
     suspend fun addToCart(item: Product): Long
 
-    suspend fun removeFromCart(item: Product)
+    suspend fun removeFromCart(productId: Int)
 
     suspend fun clearCart()
 
     suspend fun getTotalPrice(): Double
 
     suspend fun getCartItemCount(): Int
+
+    fun getCartCount(): Flow<Int>
 }

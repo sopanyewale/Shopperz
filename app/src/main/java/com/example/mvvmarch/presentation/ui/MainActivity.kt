@@ -36,10 +36,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mvvmarch.presentation.ui.screen.CartScreen
 import com.example.mvvmarch.presentation.ui.screen.CategoryScreen
 import com.example.mvvmarch.presentation.ui.screen.ProductDetailsScreen
 import com.example.mvvmarch.presentation.ui.screen.ProductListScreen
-import com.example.mvvmarch.presentation.viewmodel.MainViewModel
 import com.example.mvvmarch.presentation.viewmodel.NotificationViewModel
 import com.example.mvvmarch.presentation.viewmodel.ProductsViewModel
 import com.example.mvvmarch.ui.theme.MvvmArchTheme
@@ -49,7 +49,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val notificationViewModel: NotificationViewModel by viewModels()
-    private val mainViewModel: MainViewModel by viewModels()
+    //private val mainViewModel: MainViewModel by viewModels()
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -69,7 +69,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             MvvmArchTheme {
                 // A surface container using the 'background' color from the theme
-                val cartCount = mainViewModel.cartItemCount.collectAsState().value
+                val productListViewModel: ProductsViewModel = hiltViewModel()
+                val cartCount = productListViewModel.cartItemCount.collectAsState().value
+                val navController = rememberNavController()
                 Scaffold(
                     topBar = {
                     CenterAlignedTopAppBar(
@@ -78,7 +80,7 @@ class MainActivity : ComponentActivity() {
                         },
                         actions = {
                             IconButton(onClick = {
-                                Toast.makeText(applicationContext, "Shopping Cart Clicked", Toast.LENGTH_SHORT).show()
+                                navController.navigate("cart")
                             }) {
                                 BadgedBox(badge = { Badge { Text("$cartCount") } }) {
                                     Icon(
@@ -98,8 +100,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }) { innerPadding ->
                     setupNotificationViewModel()
-                    val navController = rememberNavController()
-                    AppNavHost(navController, Modifier.padding(innerPadding))
+                    AppNavHost(navController, Modifier.padding(innerPadding), productListViewModel)
                 }
             }
         }
@@ -108,8 +109,12 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun AppNavHost(navController: NavHostController, modifier: Modifier) {
-        val productListViewModel: ProductsViewModel = hiltViewModel()
+    fun AppNavHost(
+        navController: NavHostController,
+        modifier: Modifier,
+        productListViewModel: ProductsViewModel
+    ) {
+
         NavHost(navController = navController, startDestination = "category") {
             composable("category") {
                 CategoryScreen(navController = navController, modifier = modifier)
@@ -123,10 +128,15 @@ class MainActivity : ComponentActivity() {
                 )
             ) {
                 val category = it.arguments?.getString("category") ?: ""
-                ProductListScreen(navController = navController, viewModel = productListViewModel, modifier = modifier, category = category) }
+                ProductListScreen(navController = navController, viewModel = productListViewModel, modifier = modifier, category = category)
+            }
 
             composable("productDetails") {
                 ProductDetailsScreen(navController = navController, viewModel = productListViewModel, modifier = modifier)
+            }
+
+            composable("cart") {
+                CartScreen(navController = navController, modifier = modifier)
             }
         }
     }

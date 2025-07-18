@@ -12,6 +12,6 @@ data class Product(
     var image: String = "",
     var price: Double = 0.0,
     @Ignore var rating: Rating = Rating(),
-    var title: String = "Blank Title",
+    var title: String = "",
     var orderQuantity: Int = 0
 )
